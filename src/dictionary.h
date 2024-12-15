@@ -16,6 +16,7 @@ class Dictionary {
  public:
   Dictionary(std::string phonemes_path, std::string dictionary_path);
   std::vector<Word> getWords(std::string number);
+  void saveWords(std::string out_path, std::string start, std::string end);
 
  private:
   std::string _dictionary_path;

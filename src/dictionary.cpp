@@ -2,6 +2,7 @@
 
 #include <utf8.h>
 
+#include <csv.hpp>
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -57,5 +58,27 @@ std::vector<Word> Dictionary::getWords(std::string number) {
     return _dictionary.at(number);
   } catch (std::out_of_range& e) {
     return {};
+  }
+}
+
+void Dictionary::saveWords(std::string out_path, std::string start,
+                           std::string end) {
+  std::ofstream fs(out_path, std::ofstream::out);
+
+  auto writer = csv::make_csv_writer(fs);
+
+  for (int n = stoi(start); n <= stoi(end); n++) {
+    auto words = getWords(std::to_string(n));
+    std::string value;
+
+    int i = 0;
+    for (auto& word : words) {
+      value += word.name + " (" + word.ipa + ")";
+      if (i < words.size() - 1) {
+        value += ", ";
+      }
+      i++;
+    }
+    writer << std::vector<std::string>({std::to_string(n), value});
   }
 }
