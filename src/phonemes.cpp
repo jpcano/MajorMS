@@ -11,33 +11,43 @@ Phonemes::Phonemes(std::string config_path) : _config_path(config_path) {
 
   for (auto& i : _config["ignore"]) {
     std::string i_str(i);
+    std::vector<utf8::utfchar32_t> key;
     std::string::iterator it = i_str.begin();
-    if (utf8::distance(i_str.begin(), i_str.end()) == 1) {
-      _ignore.insert(utf8::next(it, i_str.end()));
+
+    for (int i = 0; i < utf8::distance(i_str.begin(), i_str.end()); i++) {
+      key.push_back(utf8::next(it, i_str.end()));
     }
+    _ignore.insert(key);
   }
 
   for (auto& i : _config["table"].items())
     for (auto& j : i.value()) {
       std::string j_str(j);
+      std::vector<utf8::utfchar32_t> key;
       std::string::iterator it = j_str.begin();
-      if (utf8::distance(j_str.begin(), j_str.end()) == 1) {
-        _table.insert({utf8::next(it, j_str.end()), i.key()});
+      for (int i = 0; i < utf8::distance(j_str.begin(), j_str.end()); i++) {
+        key.push_back(utf8::next(it, j_str.end()));
       }
+      _table.insert({key, i.key()});
     }
 }
 
-std::string Phonemes::getNumber(utf8::utfchar32_t ch) {
+std::string Phonemes::getNumber(std::vector<utf8::utfchar32_t> ch) {
   if (isIgnore(ch) || !_table.count(ch)) {
+    std::string target = "[ ";
+    for (auto& c : ch) {
+      target += std::to_string(c) + " ";
+    }
+    target += "]";
     throw std::out_of_range(
-        "Character `" + std::to_string(ch) +
-        "` (UTF32-decimal) does not exist in the table, consider adding it.");
+        "Character " + target +
+        " (UTF32-decimal) does not exist in the table, consider adding it.");
   } else {
     return _table.at(ch);
   }
 }
 
-bool Phonemes::isIgnore(utf8::utfchar32_t ch) {
+bool Phonemes::isIgnore(std::vector<utf8::utfchar32_t> ch) {
   return bool(_ignore.count(ch));
 }
 

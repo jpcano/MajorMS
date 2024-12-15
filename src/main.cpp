@@ -31,8 +31,6 @@ int main(int argc, char** argv) {
     exit(0);
   }
 
-  std::cout << "Hello World!" << std::endl;
-
   Dictionary dictionary("../data/config.json", "../data/es_ES.txt");
 
   for (auto& word : dictionary.getWords(result["number"].as<std::string>())) {
