@@ -7,8 +7,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 project(majorMS)
 
 find_package(cxxopts REQUIRED)
+find_package(utf8cpp REQUIRED)
 
 add_executable(${PROJECT_NAME} src/main.cpp)
 
 target_link_libraries(${PROJECT_NAME} cxxopts::cxxopts)
+target_link_libraries(${PROJECT_NAME} utf8cpp)
 
