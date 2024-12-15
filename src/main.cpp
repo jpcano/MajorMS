@@ -3,7 +3,14 @@
 #include <cxxopts.hpp>
 #include <fstream>
 #include <iostream>
+#include <map>
 #include <string>
+#include <vector>
+
+struct Word {
+  std::string name;
+  std::string ipa;
+};
 
 int main(int argc, char** argv) {
   cxxopts::Options options("majorMS", "Major Mnemonic System");
@@ -24,22 +31,25 @@ int main(int argc, char** argv) {
 
   std::cout << "Hello World!" << std::endl;
 
+  std::map<int, std::vector<Word>> dictionary{};
+
   std::ifstream file("../data/es_ES.txt");
-  std::string str;
-  while (std::getline(file, str)) {
-    std::cout << str << std::endl;
-
-    std::cout << "Looping the std::string" << std::endl;
-    for (char& ch : str) {
-      std::cout << ch << std::endl;
-    }
-
-    std::cout << "Looping the uf8" << std::endl;
-    std::string::iterator it = str.begin();
-    for (int i = 0; i < utf8::distance(str.begin(), str.end()); i++) {
-      utf8::utfchar32_t cp = utf8::next(it, str.end());
-      std::cout << cp << std::endl;
+  std::string line;
+  while (std::getline(file, line)) {
+    std::istringstream iss(line);
+    Word word;
+    std::getline(iss, word.name, '\t');
+    std::getline(iss, word.ipa, '\t');
+    word.ipa.erase(0, 1);
+    word.ipa.erase(word.ipa.size() - 1);
+    int ipa_len = utf8::distance(word.ipa.begin(), word.ipa.end());
+    if (!(dictionary.insert({ipa_len, {word}}).second)) {
+      dictionary[ipa_len].push_back(word);
     }
   }
+  for (auto& w : dictionary.at(8)) {
+    std::cout << w.name << ": " << w.ipa << std::endl;
+  };
+
   return 0;
 }
