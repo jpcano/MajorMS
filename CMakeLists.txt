@@ -1,0 +1,11 @@
+cmake_minimum_required(VERSION 3.23)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+project(majorMS)
+
+find_package(cxxopts REQUIRED)
+
+add_executable(${PROJECT_NAME} src/main.cpp)
+
+target_link_libraries(${PROJECT_NAME} cxxopts::cxxopts)
+
