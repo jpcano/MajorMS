@@ -33,11 +33,31 @@ int main(int argc, char** argv) {
   }
 
   auto numbers = result["numbers"].as<std::vector<std::string>>();
-  if (numbers.size() != 1 && numbers.size() != 2) {
+  if (numbers.size() == 1) {
+    try {
+      long long start = stoll(numbers[0]);
+      numbers.push_back(numbers[0]);
+    } catch (std::exception& e) {
+      std::cout << "The argument provided is not a number" << std::endl;
+      exit(0);
+    }
+  } else if (numbers.size() == 2) {
+    try {
+      long long start = stoll(numbers[0]);
+      long long end = stoll(numbers[1]);
+
+      if (start > end) {
+        std::cout << "Start number should not be greater than the end number"
+                  << std::endl;
+        exit(0);
+      }
+    } catch (std::exception& e) {
+      std::cout << "The arguments provided are not numbers" << std::endl;
+      exit(0);
+    }
+  } else {
     std::cout << "You should provide one or two numbers" << std::endl;
     exit(0);
-  } else if (numbers.size() == 1) {
-    numbers.push_back(numbers[0]);
   }
 
   Dictionary dictionary("../data/config.json", "../data/es_ES.txt");
@@ -48,7 +68,7 @@ int main(int argc, char** argv) {
     exit(0);
   }
 
-  for (int n = stoi(numbers[0]); n <= stoi(numbers[1]); n++) {
+  for (long long n = stoll(numbers[0]); n <= stoll(numbers[1]); n++) {
     std::cout << std::to_string(n) << ": ";
     auto words = dictionary.getWords(std::to_string(n));
     if (words.size() > 0) {
@@ -61,10 +81,11 @@ int main(int argc, char** argv) {
         i++;
       }
     }
-    if (n == stoi(numbers[1]))
+    if (n == stoll(numbers[1]))
       std::cout << std::endl;
     else
       std::cout << std::endl << std::endl;
   }
+
   return 0;
 }

@@ -63,11 +63,18 @@ std::vector<Word> Dictionary::getWords(std::string number) {
 
 void Dictionary::saveWords(std::string out_path, std::string start,
                            std::string end) {
+  long long start_ll = stoll(start);
+  long long end_ll = stoll(end);
+
+  if (start_ll > end_ll)
+    throw std::invalid_argument(
+        "Start number should not be grater than the end number");
+
   std::ofstream fs(out_path, std::ofstream::out);
 
   auto writer = csv::make_csv_writer(fs);
 
-  for (int n = stoi(start); n <= stoi(end); n++) {
+  for (long long n = stoll(start); n <= stoll(end); n++) {
     auto words = getWords(std::to_string(n));
     std::string value;
 
