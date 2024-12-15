@@ -1,11 +1,15 @@
 #include <utf8.h>
+#include <utf8/checked.h>
 
 #include <cxxopts.hpp>
+#include <exception>
 #include <fstream>
 #include <iostream>
 #include <map>
 #include <string>
 #include <vector>
+
+#include "phonemes.h"
 
 struct Word {
   std::string name;
@@ -47,9 +51,27 @@ int main(int argc, char** argv) {
       dictionary[ipa_len].push_back(word);
     }
   }
+
   for (auto& w : dictionary.at(8)) {
     std::cout << w.name << ": " << w.ipa << std::endl;
   };
 
+  Phonemes p("../data/config.json");
+  p.printConfig();
+  try {
+    std::string num;
+    num = p.getNumber(107);  // k
+    std::cout << "number: " << num << std::endl;
+    num = p.getNumber(110);  // n
+    std::cout << "number: " << num << std::endl;
+    num = p.getNumber(111);  // o
+    std::cout << "number: " << num << std::endl;
+    num = p.getNumber(97);  // a
+    std::cout << "number: " << num << std::endl;
+    num = p.getNumber(122);  // z
+    std::cout << "number: " << num << std::endl;
+  } catch (std::exception& e) {
+    std::cout << e.what() << std::endl;
+  }
   return 0;
 }
