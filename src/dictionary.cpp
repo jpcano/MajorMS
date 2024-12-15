@@ -1,11 +1,11 @@
 #include "dictionary.h"
 
 #include <utf8.h>
-#include <utf8/checked.h>
 
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -35,7 +35,7 @@ Dictionary::Dictionary(std::string phonemes_path, std::string dictionary_path)
             ch.push_back(utf8::next(it, word.ipa.end()));
             i++;
           }
-        } catch (utf8::not_enough_room &e) {
+        } catch (utf8::not_enough_room& e) {
         }
       }
       //      std::cout << "later" << std::endl;
@@ -53,5 +53,9 @@ Dictionary::Dictionary(std::string phonemes_path, std::string dictionary_path)
 }
 
 std::vector<Word> Dictionary::getWords(std::string number) {
-  return _dictionary.at(number);
+  try {
+    return _dictionary.at(number);
+  } catch (std::out_of_range& e) {
+    return {};
+  }
 }

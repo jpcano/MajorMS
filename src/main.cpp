@@ -33,8 +33,20 @@ int main(int argc, char** argv) {
 
   Dictionary dictionary("../data/config.json", "../data/es_ES.txt");
 
-  for (auto& word : dictionary.getWords(result["number"].as<std::string>())) {
-    std::cout << "Word: " << word.name << "    " << word.ipa << std::endl;
+  auto words = dictionary.getWords(result["number"].as<std::string>());
+  if (words.size() == 0) {
+    std::cout << "No words found" << std::endl;
+  } else {
+    std::cout << words.size() << " words found:" << std::endl;
+    int i = 0;
+    for (auto& word : words) {
+      std::cout << word.name << " (" << word.ipa << ")";
+      if (i < words.size() - 1) {
+        std::cout << ", ";
+      }
+      i++;
+    }
+    std::cout << std::endl;
   }
   return 0;
 }
