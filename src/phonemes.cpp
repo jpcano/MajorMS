@@ -1,5 +1,7 @@
 #include "phonemes.h"
 
+#include <utf8/checked.h>
+
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
@@ -52,3 +54,22 @@ bool Phonemes::isIgnore(std::vector<utf8::utfchar32_t> ch) {
 }
 
 void Phonemes::printConfig() { std::cout << _config.dump(4) << std::endl; }
+
+int Phonemes::nextPhoneme(std::string::iterator& it, std::string::iterator end,
+                          std::vector<utf8::utfchar32_t>& ch) {
+  int i = 1;
+  utf8::utfchar32_t c = utf8::next(it, end);
+  ch.push_back(c);
+
+  // Detect and extract affricates
+  // https://en.wikipedia.org/wiki/International_Phonetic_Alphabet#Affricates
+
+  // tʃ
+  if (c == 116 && utf8::distance(it, end) >= 1) {
+    if (utf8::peek_next(it, end) == 643) {
+      ch.push_back(utf8::next(it, end));
+      i++;
+    }
+  }
+  return i;
+}
