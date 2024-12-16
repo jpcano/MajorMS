@@ -8,8 +8,11 @@
 #include <string>
 
 Phonemes::Phonemes(std::string config_path) : _config_path(config_path) {
-  std::ifstream f(_config_path);
-  _config = json::parse(f);
+  std::ifstream fi(_config_path);
+  _config = json::parse(fi);
+
+  std::ofstream fo(_config_path, std::ofstream::out);
+  fo << _config.dump(2);
 
   for (auto& i : _config["ignore"]) {
     std::string i_str(i);
