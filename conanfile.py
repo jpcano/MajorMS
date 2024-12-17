@@ -10,3 +10,4 @@ class CompressorRecipe(ConanFile):
         self.requires("utfcpp/4.0.5")
         self.requires("nlohmann_json/3.11.3")
         self.requires("vincentlaucsb-csv-parser/2.3.0")
+        self.requires("xxhash/0.8.2")

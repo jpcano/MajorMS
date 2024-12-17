@@ -2,6 +2,7 @@
 #define PHONEMES_H
 
 #include <utf8.h>
+#include <xxhash.h>
 
 #include <map>
 #include <nlohmann/json.hpp>
@@ -22,6 +23,7 @@ class Phonemes {
 
  private:
   std::string _config_path;
+  XXH128_hash_t _config_hash;
   json _config;
   std::set<std::vector<utf8::utfchar32_t>> _ignore;
   std::map<std::vector<utf8::utfchar32_t>, std::string> _table;

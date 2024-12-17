@@ -11,8 +11,11 @@ Phonemes::Phonemes(std::string config_path) : _config_path(config_path) {
   std::ifstream fi(_config_path);
   _config = json::parse(fi);
 
+  std::string _config_str = _config.dump(2);
+  _config_hash = XXH3_128bits(_config_str.c_str(), strlen(_config_str.c_str()));
+
   std::ofstream fo(_config_path, std::ofstream::out);
-  fo << _config.dump(2);
+  fo << _config_str;
 
   for (auto& i : _config["ignore"]) {
     std::string i_str(i);
