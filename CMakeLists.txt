@@ -16,6 +16,8 @@ add_executable(${PROJECT_NAME}
   src/main.cpp
   src/phonemes.cpp
   src/dictionary.cpp
+  src/major.cpp
+  src/string_number.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE src)

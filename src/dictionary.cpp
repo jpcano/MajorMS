@@ -2,9 +2,7 @@
 
 #include <utf8.h>
 
-#include <csv.hpp>
 #include <fstream>
-#include <iostream>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -38,6 +36,8 @@ Dictionary::Dictionary(std::string phonemes_path, std::string dictionary_path)
       }
     }
 
+    _longest = number.size() > _longest ? number.size() : _longest;
+
     if (!(_dictionary.insert({number, {word}}).second)) {
       // Collision detected, then just append an item to the existing vector
       _dictionary[number].push_back(word);
@@ -45,40 +45,8 @@ Dictionary::Dictionary(std::string phonemes_path, std::string dictionary_path)
   }
 }
 
+std::string::size_type Dictionary::getLongest() const { return _longest; }
+
 std::vector<Word> Dictionary::getWords(std::string number) {
-  try {
-    return _dictionary.at(number);
-  } catch (std::out_of_range& e) {
-    return {};
-  }
-}
-
-void Dictionary::saveWords(std::string out_path, std::string start,
-                           std::string end) {
-  long long start_ll = stoll(start);
-  long long end_ll = stoll(end);
-
-  if (start_ll > end_ll)
-    throw std::invalid_argument(
-        "Start number should not be grater than the end number");
-
-  std::ofstream fs(out_path, std::ofstream::out);
-
-  auto writer = csv::make_csv_writer(fs);
-
-  for (long long n = stoll(start); n <= stoll(end); n++) {
-    auto words = getWords(std::to_string(n));
-    std::string value;
-
-    int i = 0;
-    for (auto& word : words) {
-      value += word.name + " (" + word.ipa + ")";
-      if (i < words.size() - 1) {
-        value += ", ";
-      }
-      i++;
-    }
-
-    writer << std::vector<std::string>({std::to_string(n), value});
-  }
+  return _dictionary.at(number);
 }

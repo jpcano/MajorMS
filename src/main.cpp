@@ -2,14 +2,13 @@
 #include <utf8/checked.h>
 
 #include <cxxopts.hpp>
-#include <exception>
 #include <fstream>
 #include <iostream>
-#include <map>
 #include <string>
 #include <vector>
 
-#include "dictionary.h"
+#include "major.h"
+#include "string_number.h"
 
 int main(int argc, char** argv) {
   cxxopts::Options options("majorMS", "Major Mnemonic System");
@@ -35,23 +34,23 @@ int main(int argc, char** argv) {
   auto numbers = result["numbers"].as<std::vector<std::string>>();
   if (numbers.size() == 1) {
     try {
-      long long start = stoll(numbers[0]);
+      StringNumber sn(numbers[0]);
       numbers.push_back(numbers[0]);
-    } catch (std::exception& e) {
+    } catch (...) {
       std::cout << "The argument provided is not a number" << std::endl;
       exit(0);
     }
   } else if (numbers.size() == 2) {
     try {
-      long long start = stoll(numbers[0]);
-      long long end = stoll(numbers[1]);
+      StringNumber sn_start(numbers[0]);
+      StringNumber sn_end(numbers[1]);
 
-      if (start > end) {
+      if (sn_start > sn_end) {
         std::cout << "Start number should not be greater than the end number"
                   << std::endl;
         exit(0);
       }
-    } catch (std::exception& e) {
+    } catch (...) {
       std::cout << "The arguments provided are not numbers" << std::endl;
       exit(0);
     }
@@ -59,33 +58,35 @@ int main(int argc, char** argv) {
     std::cout << "You should provide one or two numbers" << std::endl;
     exit(0);
   }
-
-  Dictionary dictionary("../data/config.json", "../data/es_ES.txt");
+  Major major("../data/config.json", "../data/es_ES.txt");
 
   if (result.count("csv")) {
-    dictionary.saveWords(result["csv"].as<std::string>(), numbers[0],
-                         numbers[1]);
+    major.saveWords(result["csv"].as<std::string>(), numbers[0], numbers[1]);
     exit(0);
   }
 
-  for (long long n = stoll(numbers[0]); n <= stoll(numbers[1]); n++) {
-    std::cout << std::to_string(n) << ": ";
-    auto words = dictionary.getWords(std::to_string(n));
-    if (words.size() > 0) {
-      int i = 0;
-      for (auto& word : words) {
-        std::cout << word.name << " (" << word.ipa << ")";
-        if (i < words.size() - 1) {
-          std::cout << ", ";
+  for (StringNumber n(numbers[0]); n <= StringNumber(numbers[1]); n++) {
+    std::cout << n.get() << " ===============================" << std::endl
+              << std::endl;
+    auto results = major.findWords(n.get());
+    if (results.size() > 0) {
+      int i, j;
+      j = 0;
+      for (auto& result : results) {
+        for (auto& words : result) {
+          i = 0;
+          for (auto& word : words.data) {
+            std::cout << word.name << " (" << word.ipa << ")";
+            if (i++ < words.data.size() - 1) std::cout << ", ";
+          }
+          std::cout << std::endl << std::endl;
         }
-        i++;
+        if ((results.size() - 1) != j++)
+          std::cout << "---" << std::endl << std::endl;
       }
     }
-    if (n == stoll(numbers[1]))
-      std::cout << std::endl;
-    else
-      std::cout << std::endl << std::endl;
+    if (n != StringNumber(numbers[1])) std::cout << std::endl;
   }
-
+  // }
   return 0;
 }
