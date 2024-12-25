@@ -1,9 +1,13 @@
 #include "string_number.h"
 
 #include <iostream>
+#include <stdexcept>
 #include <string>
 
 StringNumber::StringNumber(std::string number) {
+  if (number.size() == 0)
+    throw std::invalid_argument("Empty string cannot be a number");
+
   for (std::string::size_type i = 0; i < number.size(); ++i) {
     stoi(number.substr(i, 1));
   }
