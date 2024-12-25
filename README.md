@@ -6,14 +6,16 @@ It is used to help in memorizing numbers following  major system (also called th
 
 ## Build instructions
 
-    1. Use conan to download the depencencies and generate the files that CMake needs:
-    ```shell
-    conan install . --output-folder=build --build=missing
-    ```
+1. Use conan to download the depencencies and generate the files that CMake needs:
 
-    2. Use CMake to build the project:
-    ```shell
-    cd build
-    cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
-    cmake --build .
-    ```
+```shell
+conan install . --output-folder=build --build=missing
+```
+
+2. Use CMake to build the project:
+
+```shell
+cd build
+cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
+cmake --build .
+```
