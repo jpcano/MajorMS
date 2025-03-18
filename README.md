@@ -19,3 +19,7 @@ cd build
 cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
 cmake --build .
 ```
+
+## About the dictionaries
+
+All the dictionaries contained in the `data` directory and stored as `TXT` files, have been obtained from the project [IPA Dict](https://github.com/open-dict-data/ipa-dict) that is part of [Open-Licensed dictionary data](https://open-dict-data.github.io/) project and therefore they retain their original licenses.

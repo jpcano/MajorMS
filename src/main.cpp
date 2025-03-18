@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 
+#include "dictionary.h"
 #include "major.h"
 #include "string_number.h"
 
@@ -16,7 +17,10 @@ int main(int argc, char** argv) {
   options.add_options()("v,version", "Show version")("h,help", "Print usage")(
       "numbers", "The number", cxxopts::value<std::vector<std::string>>())(
       "csv", "Save to CSV file", cxxopts::value<std::string>())(
-      "merged", "Used merged search strategy", cxxopts::value<bool>());
+      "dict", "A comma-sepparated list of dictionaries to use. Default: en,es",
+      cxxopts::value<std::vector<std::string>>()->default_value("en,es"))(
+      "merged", "Used a merged search strategy",
+      cxxopts::value<bool>()->default_value("false"));
 
   options.parse_positional({"numbers"});
 
@@ -60,13 +64,21 @@ int main(int argc, char** argv) {
     exit(0);
   }
 
-  Major major({
-      {"en", "../data/config_en_UK.json", "../data/en_UK.txt"},
-      {"es", "../data/config_es_ES.json", "../data/es_ES.txt"},
-  });
+  std::vector<DictionaryConfig> configs;
+  for (std::string dict : result["dict"].as<std::vector<std::string>>()) {
+    if (dict == "en") {
+      configs.push_back(
+          {"en", "../data/config_en_UK.json", "../data/en_UK.txt"});
+    } else if (dict == "es") {
+      configs.push_back(
+          {"es", "../data/config_es_ES.json", "../data/es_ES.txt"});
+    }
+  }
 
   SearchType st =
       result.count("merged") ? SearchType::Merged : SearchType::Separated;
+
+  Major major(configs);
 
   if (result.count("csv")) {
     major.saveWords(result["csv"].as<std::string>(), numbers[0], numbers[1],

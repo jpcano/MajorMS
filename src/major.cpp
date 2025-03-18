@@ -3,6 +3,7 @@
 #include <csv.hpp>
 #include <fstream>
 #include <memory>
+#include <stdexcept>
 
 #include "string_number.h"
 
@@ -27,12 +28,17 @@ std::vector<Result> Major::findWords(std::string number, SearchType st) {
 }
 
 std::vector<Word> Major::getWords(std::string number) {
-  std::vector<Word> ret;
+  std::vector<Word> ret = {};
   std::vector<Word> results;
   for (auto d : dicts_) {
-    results = d->getWords(number);
-    ret.insert(std::end(ret), std::begin(results), std::end(results));
+    try {
+      results = d->getWords(number);
+      ret.insert(std::end(ret), std::begin(results), std::end(results));
+    } catch (...) {
+    }
   }
+  if (ret.size() == 0) throw std::out_of_range("No word found");
+
   return ret;
 }
 
