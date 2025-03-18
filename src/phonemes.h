@@ -16,7 +16,8 @@ class Phonemes {
  public:
   Phonemes(std::string config_path);
   void printConfig();
-  std::string getNumber(std::vector<utf8::utfchar32_t> ch);
+  std::string getNumber(std::vector<utf8::utfchar32_t> ch, std::string word,
+                        std::string ipa);
   bool isIgnore(std::vector<utf8::utfchar32_t> ch);
   int nextPhoneme(std::string::iterator &it, std::string::iterator end,
                   std::vector<utf8::utfchar32_t> &ch);

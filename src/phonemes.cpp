@@ -1,6 +1,7 @@
 #include "phonemes.h"
 
 #include <utf8/checked.h>
+#include <utf8/cpp11.h>
 
 #include <fstream>
 #include <iostream>
@@ -40,7 +41,8 @@ Phonemes::Phonemes(std::string config_path) : _config_path(config_path) {
     }
 }
 
-std::string Phonemes::getNumber(std::vector<utf8::utfchar32_t> ch) {
+std::string Phonemes::getNumber(std::vector<utf8::utfchar32_t> ch,
+                                std::string word, std::string ipa) {
   if (isIgnore(ch) || !_table.count(ch)) {
     std::string target = "[ ";
     for (auto& c : ch) {
@@ -48,8 +50,8 @@ std::string Phonemes::getNumber(std::vector<utf8::utfchar32_t> ch) {
     }
     target += "]";
     throw std::out_of_range(
-        "Character " + target +
-        " (UTF32-decimal) does not exist in the table, consider adding it.");
+        "Character " + target + " (UTF32-decimal) in the word " + word + " (" +
+        ipa + ") " + "does not exist in the table, consider adding it.");
   } else {
     return _table.at(ch);
   }
@@ -73,6 +75,13 @@ int Phonemes::nextPhoneme(std::string::iterator& it, std::string::iterator end,
   // tʃ
   if (c == 116 && utf8::distance(it, end) >= 1) {
     if (utf8::peek_next(it, end) == 643) {
+      ch.push_back(utf8::next(it, end));
+      i++;
+    }
+  }
+  // dʒ
+  if (c == 100 && utf8::distance(it, end) >= 1) {
+    if (utf8::peek_next(it, end) == 658) {
       ch.push_back(utf8::next(it, end));
       i++;
     }

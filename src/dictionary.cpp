@@ -35,7 +35,7 @@ Dictionary::Dictionary(DictionaryConfig config)
       int len = _phonemes.nextPhoneme(it, word.ipa.end(), ch);
       i += len - 1;
       if (!_phonemes.isIgnore(ch)) {
-        number += _phonemes.getNumber(ch);
+        number += _phonemes.getNumber(ch, word.name, word.ipa);
       }
     }
 

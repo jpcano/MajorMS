@@ -60,10 +60,10 @@ int main(int argc, char** argv) {
     exit(0);
   }
 
-  // Major major({{"es", "../data/config.json", "../data/es_ES.txt"},
-  //              {"es", "../data/config.json", "../data/es_ES.txt"}});
-
-  Major major({{"es", "../data/config.json", "../data/es_ES.txt"}});
+  Major major({
+      {"en", "../data/config_en_UK.json", "../data/en_UK.txt"},
+      {"es", "../data/config_es_ES.json", "../data/es_ES.txt"},
+  });
 
   SearchType st =
       result.count("merged") ? SearchType::Merged : SearchType::Separated;
