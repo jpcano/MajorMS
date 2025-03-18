@@ -17,7 +17,7 @@ int main(int argc, char** argv) {
   options.add_options()("v,version", "Show version")("h,help", "Print usage")(
       "numbers", "The number", cxxopts::value<std::vector<std::string>>())(
       "csv", "Save to CSV file", cxxopts::value<std::string>())(
-      "dict", "A comma-sepparated list of dictionaries to use. Default: en,es",
+      "dict", "A comma-sepparated list of dictionaries to use",
       cxxopts::value<std::vector<std::string>>()->default_value("en,es"))(
       "merged", "Used a merged search strategy",
       cxxopts::value<bool>()->default_value("false"));
