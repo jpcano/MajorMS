@@ -8,9 +8,9 @@
 #include <string>
 #include <vector>
 
-Dictionary::Dictionary(std::string phonemes_path, std::string dictionary_path)
-    : _phonemes(phonemes_path), _dictionary_path(dictionary_path) {
-  std::ifstream file(_dictionary_path);
+Dictionary::Dictionary(DictionaryConfig config)
+    : _phonemes(config.phonemes_path), _config(config) {
+  std::ifstream file(config.dictionary_path);
   std::string line;
 
   while (std::getline(file, line)) {

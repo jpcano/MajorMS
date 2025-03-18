@@ -15,7 +15,8 @@ int main(int argc, char** argv) {
 
   options.add_options()("v,version", "Show version")("h,help", "Print usage")(
       "numbers", "The number", cxxopts::value<std::vector<std::string>>())(
-      "csv", "Save to CSV file", cxxopts::value<std::string>());
+      "csv", "Save to CSV file", cxxopts::value<std::string>())(
+      "merged", "Used merged search strategy", cxxopts::value<bool>());
 
   options.parse_positional({"numbers"});
 
@@ -58,17 +59,23 @@ int main(int argc, char** argv) {
     std::cout << "You should provide one or two numbers" << std::endl;
     exit(0);
   }
-  Major major("../data/config.json", "../data/es_ES.txt");
+
+  Major major({{"spanish", "../data/config.json", "../data/es_ES.txt"},
+               {"spanish", "../data/config.json", "../data/es_ES.txt"}});
+
+  SearchType st =
+      result.count("merged") ? SearchType::Merged : SearchType::Separated;
 
   if (result.count("csv")) {
-    major.saveWords(result["csv"].as<std::string>(), numbers[0], numbers[1]);
+    major.saveWords(result["csv"].as<std::string>(), numbers[0], numbers[1],
+                    st);
     exit(0);
   }
 
   for (StringNumber n(numbers[0]); n <= StringNumber(numbers[1]); n++) {
     std::cout << n.get() << " ===============================" << std::endl
               << std::endl;
-    auto results = major.findWords(n.get());
+    auto results = major.findWords(n.get(), st);
     if (results.size() > 0) {
       int i, j;
       j = 0;
@@ -87,6 +94,6 @@ int main(int argc, char** argv) {
     }
     if (n != StringNumber(numbers[1])) std::cout << std::endl;
   }
-  // }
+
   return 0;
 }
