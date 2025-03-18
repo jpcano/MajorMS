@@ -14,6 +14,7 @@ struct DictionaryConfig {
 };
 
 struct Word {
+  std::string lang;
   std::string name;
   std::string ipa;
 };

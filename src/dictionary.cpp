@@ -16,6 +16,9 @@ Dictionary::Dictionary(DictionaryConfig config)
   while (std::getline(file, line)) {
     std::istringstream iss(line);
     Word word;
+
+    word.lang = _config.name;
+
     std::getline(iss, word.name, '\t');
     std::getline(iss, word.ipa, '\t');
 
