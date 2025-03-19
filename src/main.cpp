@@ -19,8 +19,7 @@ int main(int argc, char** argv) {
       "csv", "Save to CSV file", cxxopts::value<std::string>())(
       "dict", "A comma-sepparated list of dictionaries to use",
       cxxopts::value<std::vector<std::string>>()->default_value("en,es"))(
-      "merged", "Used a merged search strategy",
-      cxxopts::value<bool>()->default_value("false"));
+      "merged", "Used a merged search strategy", cxxopts::value<bool>());
 
   options.parse_positional({"numbers"});
 
@@ -97,7 +96,8 @@ int main(int argc, char** argv) {
         for (auto& words : result) {
           i = 0;
           for (auto& word : words.data) {
-            std::cout << word.name << " (" << word.ipa << ")";
+            std::cout << word.name << " (" << word.ipa << " | " << word.lang
+                      << ")";
             if (i++ < words.data.size() - 1) std::cout << ", ";
           }
           std::cout << std::endl << std::endl;

@@ -84,7 +84,8 @@ std::vector<Result> Major::findWords_(std::string number, int depth,
   for (std::string::size_type i = a > 0 ? a : 0; i < number.size() - depth;
        ++i) {
     try {
-      std::vector<Word> current = getWords(number.substr(0, i + 1));
+      auto n = number.substr(0, i + 1);
+      auto current = dict == nullptr ? getWords(n) : dict->getWords(n);
       for (auto i :
            findWords_(number.substr(i + 1), depth - 1, dict, longest)) {
         i.insert(i.begin(), {current, number});
