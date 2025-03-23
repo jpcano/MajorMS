@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.23)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-set(CMAKE_CXX_STANDARD 17) 
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 project(majorMS)
@@ -14,35 +14,15 @@ find_package(vincentlaucsb-csv-parser REQUIRED)
 find_package(xxHash REQUIRED)
 find_package(GTest REQUIRED)
 
-add_executable(${PROJECT_NAME}
-  src/main.cpp
-  src/phonemes.cpp
-  src/dictionary.cpp
-  src/major.cpp
-  src/string_number.cpp
+add_subdirectory(src)
+add_subdirectory(tests)
+
+
+install(TARGETS ${PROJECT_NAME} ${PROJECT_TEST_NAME})
+install(FILES
+  data/en_UK.txt
+  data/config_en_UK.json
+  data/es_ES.txt
+  data/config_es_ES.json
+  DESTINATION data
 )
-
-target_include_directories(${PROJECT_NAME} PRIVATE src)
-
-target_link_libraries(${PROJECT_NAME} cxxopts::cxxopts)
-target_link_libraries(${PROJECT_NAME} utf8cpp)
-target_link_libraries(${PROJECT_NAME} nlohmann_json::nlohmann_json)
-target_link_libraries(${PROJECT_NAME} vincentlaucsb-csv-parser::vincentlaucsb-csv-parser)
-target_link_libraries(${PROJECT_NAME} xxHash::xxhash)
-
-enable_testing()
-
-add_executable(
-  ${PROJECT_TEST_NAME}
-  tests/hello_test.cpp
-  tests/string_number.cpp
-  src/string_number.cpp
-)
-target_include_directories(${PROJECT_TEST_NAME} PRIVATE src)
-target_link_libraries(
-  ${PROJECT_TEST_NAME}
-  GTest::gtest_main
-)
-
-include(GoogleTest)
-gtest_discover_tests(${PROJECT_TEST_NAME})
