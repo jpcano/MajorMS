@@ -10,9 +10,9 @@ It is used to help in memorizing numbers following  major system (also called th
 
 These are the requirements to needed to build this project:
 
+1. A C++ compiler with support C++ >= 17
 1. CMake >= 3.23
 1. Conan >= 2.14
-1. A C++ compiler with support for >= C++ 17
 
 Execute the following script:
 
