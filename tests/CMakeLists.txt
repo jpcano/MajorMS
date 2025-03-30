@@ -1,3 +1,5 @@
+set(PROJECT_TEST_NAME test_majorMS)
+
 enable_testing()
 add_executable(
   ${PROJECT_TEST_NAME}
@@ -12,3 +14,5 @@ target_link_libraries(
 )
 include(GoogleTest)
 gtest_discover_tests(${PROJECT_TEST_NAME})
+
+install(TARGETS ${PROJECT_TEST_NAME})

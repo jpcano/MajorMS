@@ -89,23 +89,8 @@ int main(int argc, char** argv) {
     std::cout << n.get() << " ===============================" << std::endl
               << std::endl;
     auto results = major.findWords(n.get(), st);
-    if (results.size() > 0) {
-      int i, j;
-      j = 0;
-      for (auto& result : results) {
-        for (auto& words : result) {
-          i = 0;
-          for (auto& word : words.data) {
-            std::cout << word.name << " (" << word.ipa << " | " << word.lang
-                      << ")";
-            if (i++ < words.data.size() - 1) std::cout << ", ";
-          }
-          std::cout << std::endl << std::endl;
-        }
-        if ((results.size() - 1) != j++)
-          std::cout << "---" << std::endl << std::endl;
-      }
-    }
+    std::cout << Major::printResults(results);
+
     if (n != StringNumber(numbers[1])) std::cout << std::endl;
   }
 

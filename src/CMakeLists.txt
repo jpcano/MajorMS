@@ -15,3 +15,6 @@ add_executable(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME} cxxopts::cxxopts)
 target_link_libraries(${PROJECT_NAME} majorms_lib)
 
+install(TARGETS ${PROJECT_NAME})
+
+add_subdirectory(ui)

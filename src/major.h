@@ -23,6 +23,7 @@ class Major {
   std::vector<Result> findWords(std::string number, SearchType st);
   void saveWords(std::string out_path, std::string start, std::string end,
                  SearchType st);
+  static std::string printResults(std::vector<Result> results);
 
  private:
   std::vector<std::shared_ptr<Dictionary>> dicts_;

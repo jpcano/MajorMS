@@ -6,18 +6,16 @@ It is used to help in memorizing numbers following  major system (also called th
 
 ## Build instructions
 
-1. Use conan to download the depencencies and generate the files that CMake needs:
+These are the requirements to needed to build this project:
+
+1. CMake >= 3.23
+1. Conan >= 2.14
+1. A C++ compiler with support for >= C++ 17
+
+Execute the following script:
 
 ```shell
-conan install . --output-folder=build --build=missing
-```
-
-2. Use CMake to build the project:
-
-```shell
-cd build
-cmake .. -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
-cmake --build .
+./build.sh
 ```
 
 ## About the dictionaries

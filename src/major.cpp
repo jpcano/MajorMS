@@ -3,6 +3,7 @@
 #include <csv.hpp>
 #include <fstream>
 #include <memory>
+#include <sstream>
 #include <stdexcept>
 
 #include "string_number.h"
@@ -105,21 +106,26 @@ void Major::saveWords(std::string out_path, std::string start, std::string end,
 
   for (StringNumber n(start); n <= StringNumber(end); n++) {
     auto results = findWords(n.get(), st);
-    std::string value;
-
-    int j = 0;
-    for (auto& result : results) {
-      for (auto& words : result) {
-        int i = 0;
-        for (auto& word : words.data) {
-          value += word.name + " (" + word.ipa + ")";
-          if (i++ < words.data.size() - 1) value += ", ";
-        }
-        value += "\n";
-      }
-      if ((results.size() - 1) != j++) value += "---\n";
-    }
-
+    std::string value = Major::printResults(results);
     writer << std::vector<std::string>({n.get(), value});
   }
+}
+
+std::string Major::printResults(std::vector<Result> results) {
+  std::stringstream ss;
+  int i = 0, j = 0;
+
+  for (auto& result : results) {
+    for (auto& words : result) {
+      i = 0;
+      for (auto& word : words.data) {
+        ss << word.name << " (" << word.ipa << " | " << word.lang << ")";
+        if (i++ < words.data.size() - 1) ss << ", ";
+      }
+      ss << std::endl << std::endl;
+    }
+    if ((results.size() - 1) != j++) ss << "---" << std::endl << std::endl;
+  }
+
+  return ss.str();
 }
