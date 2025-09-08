@@ -13,13 +13,14 @@
 Major::Major(std::vector<DictionaryConfig> configs) {
   for (auto c : configs) {
     std::unique_ptr<Dictionary> d;
-    std::fstream cerealFile(c.dictionary_path + ".cereal");
-    if (cerealFile.good()) {
-      cereal::BinaryInputArchive iArchive(cerealFile);
+    std::ifstream iFile(c.dictionary_path + ".cereal");
+    if (iFile.good()) {
+      cereal::BinaryInputArchive iArchive(iFile);
       iArchive(d);
     } else {
       d = std::make_unique<Dictionary>(c);
-      cereal::BinaryOutputArchive oArchive(cerealFile);
+      std::ofstream oFile(c.dictionary_path + ".cereal");
+      cereal::BinaryOutputArchive oArchive(oFile);
       oArchive(d);
     }
 
