@@ -4,26 +4,31 @@
 #include <cereal/types/memory.hpp>
 #include <csv.hpp>
 #include <fstream>
+#include <map>
 #include <memory>
 #include <sstream>
 #include <stdexcept>
 
 #include "string_number.h"
 
-Major::Major(std::vector<DictionaryConfig> configs) {
-  for (auto c : configs) {
+std::map<Dicts, DictionaryConfig> dicts_configuration = {
+    {Dicts::ES, {"es", "../data/config_es_ES.json", "../data/es_ES.txt"}},
+    {Dicts::EN, {"en", "../data/config_en_UK.json", "../data/en_UK.txt"}}};
+
+Major::Major(std::vector<Dicts> dicts) {
+  for (auto dict : dicts) {
+    DictionaryConfig dictConfig = dicts_configuration[dict];
     std::unique_ptr<Dictionary> d;
-    std::ifstream iFile(c.dictionary_path + ".cereal");
+    std::ifstream iFile(dictConfig.dictionary_path + ".cereal");
     if (iFile.good()) {
       cereal::BinaryInputArchive iArchive(iFile);
       iArchive(d);
     } else {
-      d = std::make_unique<Dictionary>(c);
-      std::ofstream oFile(c.dictionary_path + ".cereal");
+      d = std::make_unique<Dictionary>(dictConfig);
+      std::ofstream oFile(dictConfig.dictionary_path + ".cereal");
       cereal::BinaryOutputArchive oArchive(oFile);
       oArchive(d);
     }
-
     dicts_.push_back(std::move(d));
   }
 }

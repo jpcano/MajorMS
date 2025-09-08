@@ -63,21 +63,19 @@ int main(int argc, char** argv) {
     exit(0);
   }
 
-  std::vector<DictionaryConfig> configs;
+  std::vector<Dicts> dicts;
   for (std::string dict : result["dict"].as<std::vector<std::string>>()) {
     if (dict == "en") {
-      configs.push_back(
-          {"en", "../data/config_en_UK.json", "../data/en_UK.txt"});
+      dicts.push_back(Dicts::EN);
     } else if (dict == "es") {
-      configs.push_back(
-          {"es", "../data/config_es_ES.json", "../data/es_ES.txt"});
+      dicts.push_back(Dicts::ES);
     }
   }
 
   SearchType st =
       result.count("merged") ? SearchType::Merged : SearchType::Separated;
 
-  Major major(configs);
+  Major major(dicts);
 
   if (result.count("csv")) {
     major.saveWords(result["csv"].as<std::string>(), numbers[0], numbers[1],

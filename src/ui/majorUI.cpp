@@ -33,10 +33,7 @@ MajorUI::MajorUI(QWidget *parent) : QMainWindow(parent), ui(new Ui::MajorUI) {
   // connect(ui->actionAbout_Qt, &QAction::triggered, this,
   //         &QApplication::aboutQt);
 
-  std::vector<DictionaryConfig> configs = {
-      {"en", "../data/config_en_UK.json", "../data/en_UK.txt"},
-      {"es", "../data/config_es_ES.json", "../data/es_ES.txt"}};
-  major = std::make_unique<Major>(configs);
+  major = std::make_unique<Major>(std::vector({Dicts::EN, Dicts::ES}));
 }
 
 MajorUI::~MajorUI() { delete ui; }
