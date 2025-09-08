@@ -1,5 +1,7 @@
 #include "major.h"
 
+#include <cereal/archives/binary.hpp>
+#include <cereal/types/memory.hpp>
 #include <csv.hpp>
 #include <fstream>
 #include <memory>
@@ -10,7 +12,18 @@
 
 Major::Major(std::vector<DictionaryConfig> configs) {
   for (auto c : configs) {
-    dicts_.push_back(std::make_unique<Dictionary>(c));
+    std::unique_ptr<Dictionary> d;
+    std::fstream cerealFile(c.dictionary_path + ".cereal");
+    if (cerealFile.good()) {
+      cereal::BinaryInputArchive iArchive(cerealFile);
+      iArchive(d);
+    } else {
+      d = std::make_unique<Dictionary>(c);
+      cereal::BinaryOutputArchive oArchive(cerealFile);
+      oArchive(d);
+    }
+
+    dicts_.push_back(std::move(d));
   }
 }
 

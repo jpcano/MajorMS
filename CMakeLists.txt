@@ -18,6 +18,7 @@ find_package(Qt6
   REQUIRED COMPONENTS Core Gui Widgets
   OPTIONAL_COMPONENTS PrintSupport
 )
+find_package(cereal REQUIRED)
 
 add_subdirectory(src)
 add_subdirectory(tests)
