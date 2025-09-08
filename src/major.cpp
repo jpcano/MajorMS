@@ -10,7 +10,7 @@
 
 Major::Major(std::vector<DictionaryConfig> configs) {
   for (auto c : configs) {
-    dicts_.push_back(std::make_shared<Dictionary>(c));
+    dicts_.push_back(std::make_unique<Dictionary>(c));
   }
 }
 
@@ -18,7 +18,7 @@ std::vector<Result> Major::findWords(std::string number, SearchType st) {
   std::vector<Result> ret;
 
   if (st == SearchType::Separated) {
-    for (std::shared_ptr<Dictionary> d : dicts_) {
+    for (const auto& d : dicts_) {
       auto results = findWords__(number, d, d->getLongest());
       ret.insert(std::end(ret), std::begin(results), std::end(results));
     }
@@ -31,7 +31,7 @@ std::vector<Result> Major::findWords(std::string number, SearchType st) {
 std::vector<Word> Major::getWords(std::string number) {
   std::vector<Word> ret = {};
   std::vector<Word> results;
-  for (auto d : dicts_) {
+  for (const auto& d : dicts_) {
     try {
       results = d->getWords(number);
       ret.insert(std::end(ret), std::begin(results), std::end(results));
@@ -45,7 +45,7 @@ std::vector<Word> Major::getWords(std::string number) {
 
 std::string::size_type Major::getLongest() {
   std::string::size_type longest = 0;
-  for (auto d : dicts_) {
+  for (const auto& d : dicts_) {
     if (d->getLongest() > longest) {
       longest = d->getLongest();
     }
@@ -54,7 +54,7 @@ std::string::size_type Major::getLongest() {
 }
 
 std::vector<Result> Major::findWords__(std::string number,
-                                       std::shared_ptr<Dictionary> dict,
+                                       const std::unique_ptr<Dictionary>& dict,
                                        std::string::size_type longest) {
   std::vector<Result> ret;
   for (std::string::size_type i = number.size() / (longest + 1);
@@ -72,7 +72,7 @@ std::vector<Result> Major::findWords__(std::string number,
 }
 
 std::vector<Result> Major::findWords_(std::string number, int depth,
-                                      std::shared_ptr<Dictionary> dict,
+                                      const std::unique_ptr<Dictionary>& dict,
                                       std::string::size_type longest) {
   if (depth == 0) {
     return {{{dict == nullptr ? getWords(number) : dict->getWords(number),

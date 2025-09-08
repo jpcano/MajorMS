@@ -26,12 +26,12 @@ class Major {
   static std::string printResults(std::vector<Result> results);
 
  private:
-  std::vector<std::shared_ptr<Dictionary>> dicts_;
+  std::vector<std::unique_ptr<Dictionary>> dicts_;
   std::vector<Result> findWords_(std::string number, int depth,
-                                 std::shared_ptr<Dictionary> dict,
+                                 const std::unique_ptr<Dictionary> &dict,
                                  std::string::size_type longest);
   std::vector<Result> findWords__(std::string number,
-                                  std::shared_ptr<Dictionary> dict,
+                                  const std::unique_ptr<Dictionary> &dict,
                                   std::string::size_type longest);
   std::string::size_type getLongest();
   std::vector<Word> getWords(std::string number);

@@ -1,5 +1,7 @@
+.cache/
+.vscode/
 build/
 dist/
-pack/
-.cache/
+packages/
+_CPack_Packages/
 CMakeUserPresets.json

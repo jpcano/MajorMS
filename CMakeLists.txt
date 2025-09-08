@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.23)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+#set(CMAKE_PREFIX_PATH "/home/suso/Qt/6.7.3/gcc_64")
 
 project(majorMS VERSION 1.0.0 LANGUAGES CXX)
-
 set(PROJECT_UI_NAME majorMS_UI)
 
 find_package(cxxopts REQUIRED)
@@ -29,4 +29,8 @@ install(FILES
   data/config_es_ES.json
   DESTINATION data
 )
+
+SET(CPACK_OUTPUT_FILE_PREFIX packages)
 include(CPack)
+
+include(CTest)

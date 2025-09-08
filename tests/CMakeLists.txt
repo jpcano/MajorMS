@@ -16,3 +16,5 @@ include(GoogleTest)
 gtest_discover_tests(${PROJECT_TEST_NAME})
 
 install(TARGETS ${PROJECT_TEST_NAME})
+add_test(NAME ${PROJECT_TEST_NAME}
+         COMMAND ${PROJECT_TEST_NAME})

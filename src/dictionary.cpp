@@ -8,8 +8,8 @@
 #include <string>
 #include <vector>
 
-Dictionary::Dictionary(DictionaryConfig config)
-    : _phonemes(config.phonemes_path), _config(config) {
+Dictionary::Dictionary(DictionaryConfig config) : _config(config) {
+  Phonemes phonemes(config.phonemes_path);
   std::ifstream file(config.dictionary_path);
   std::string line;
 
@@ -32,10 +32,10 @@ Dictionary::Dictionary(DictionaryConfig config)
 
     for (int i = 0; i < ipa_len; i++) {
       std::vector<utf8::utfchar32_t> ch;
-      int len = _phonemes.nextPhoneme(it, word.ipa.end(), ch);
+      int len = phonemes.nextPhoneme(it, word.ipa.end(), ch);
       i += len - 1;
-      if (!_phonemes.isIgnore(ch)) {
-        number += _phonemes.getNumber(ch, word.name, word.ipa);
+      if (!phonemes.isIgnore(ch)) {
+        number += phonemes.getNumber(ch, word.name, word.ipa);
       }
     }
 
@@ -50,6 +50,6 @@ Dictionary::Dictionary(DictionaryConfig config)
 
 std::string::size_type Dictionary::getLongest() const { return _longest; }
 
-std::vector<Word> Dictionary::getWords(std::string number) {
+std::vector<Word> Dictionary::getWords(std::string number) const {
   return _dictionary.at(number);
 }
