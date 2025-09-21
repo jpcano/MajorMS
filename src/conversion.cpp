@@ -42,8 +42,8 @@ std::string Conversion::phonetic_to_number(std::string phonetic) {
       if (utf8::peek_next(it, end) == U'ʃ') c.push_back(utf8::next(it, end));
     }
     // dʒ
-    else if (c[0] == U't' && utf8::distance(it, end) >= 1) {
-      if (utf8::peek_next(it, end) == U'ʃ') c.push_back(utf8::next(it, end));
+    else if (c[0] == U'd' && utf8::distance(it, end) >= 1) {
+      if (utf8::peek_next(it, end) == U'ʒ') c.push_back(utf8::next(it, end));
     }
 
     if (!_ignore.count(c)) {
