@@ -13,16 +13,19 @@
 #include "string_number.h"
 
 int main(int argc, char** argv) {
-  cxxopts::Options options("majorMS", "Major Mnemonic System");
+  cxxopts::Options options("majorMS",
+                           "Major Mnemonic System - Copyright (c) 2025 Jesus "
+                           "Cano <https://github.com/jpcano/MajorMS>");
 
-  options.add_options()("v,version", "Show version")("h,help", "Print usage")(
-      "tables", "Print conversion tables for each dictionary")(
-      "numbers", "The number", cxxopts::value<std::vector<std::string>>())(
+  options.add_options()("numbers", "The number",
+                        cxxopts::value<std::vector<std::string>>())(
       "csv", "Save to CSV file", cxxopts::value<std::string>())(
       "dict", "A comma-sepparated list of dictionaries to use",
       cxxopts::value<std::vector<std::string>>()->default_value(
           get_dict_names_csv()))("merged", "Used a merged search strategy",
-                                 cxxopts::value<bool>());
+                                 cxxopts::value<bool>())(
+      "tables", "Print conversion tables for each dictionary")(
+      "v,version", "Show version")("h,help", "Print usage");
 
   options.parse_positional({"numbers"});
 
