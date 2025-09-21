@@ -11,19 +11,6 @@
 
 #include "conversion.h"
 
-struct DictionaryConfig {
-  std::string name;
-  std::string phonemes_path;
-  std::string dictionary_path;
-
- private:
-  friend class cereal::access;
-  template <class Archive>
-  void serialize(Archive& ar) {
-    ar(name, phonemes_path, dictionary_path);
-  }
-};
-
 struct DictConfig {
   std::string name;
   std::string short_name;
