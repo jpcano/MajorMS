@@ -35,7 +35,7 @@ MajorUI::MajorUI(QWidget *parent) : QMainWindow(parent), ui(new Ui::MajorUI) {
   //         &QApplication::aboutQt);
 
   std::vector<DictConfig> configs;
-  for (const auto &c : dict_configs) configs.push_back(c.second);
+  for (const auto &c : dict_configs.configs) configs.push_back(c.second);
   major = std::make_unique<Major>(configs);
 }
 

@@ -1,6 +1,7 @@
 #include <utf8.h>
 #include <utf8/checked.h>
 
+#include <cereal/archives/json.hpp>
 #include <cxxopts.hpp>
 #include <fstream>
 #include <iostream>
@@ -77,7 +78,11 @@ int main(int argc, char** argv) {
   std::vector<DictConfig> dicts;
 
   for (std::string dict : result["dict"].as<std::vector<std::string>>())
-    dicts.push_back(dict_configs.at(dict));
+    dicts.push_back(dict_configs.configs.at(dict));
+
+  std::ofstream oFile("dict_configs.json");
+  cereal::JSONOutputArchive oArchive(oFile);
+  oArchive(dict_configs);
 
   SearchType st =
       result.count("merged") ? SearchType::Merged : SearchType::Separated;

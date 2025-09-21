@@ -16,7 +16,14 @@ struct DictConfig {
   std::string short_name;
   std::string dictionary_path;
   ConversionTable table;
+
+  template <class Archive>
+  void serialize(Archive& ar, std::uint32_t archiveVersion) {
+    ar(CEREAL_NVP(name), CEREAL_NVP(short_name), CEREAL_NVP(dictionary_path),
+       CEREAL_NVP(table));
+  }
 };
+CEREAL_CLASS_VERSION(DictConfig, 1);
 
 struct Word {
   std::string lang;
@@ -44,7 +51,7 @@ class Dictionary {
   friend class cereal::access;
   Dictionary() {};
   template <class Archive>
-  void serialize(Archive& ar) {
+  void serialize(Archive& ar, std::uint32_t archiveVersion) {
     ar(_longest, _dictionary);
   }
 };
