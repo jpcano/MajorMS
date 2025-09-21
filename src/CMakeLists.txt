@@ -6,7 +6,6 @@ add_library(majorms_lib STATIC
 )
 target_link_libraries(majorms_lib utf8cpp)
 target_link_libraries(majorms_lib vincentlaucsb-csv-parser::vincentlaucsb-csv-parser)
-target_link_libraries(majorms_lib xxHash::xxhash)
 target_link_libraries(majorms_lib cereal::cereal)
 
 

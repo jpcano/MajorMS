@@ -9,7 +9,6 @@ class CompressorRecipe(ConanFile):
         self.requires("cxxopts/3.2.0")
         self.requires("utfcpp/4.0.5")
         self.requires("vincentlaucsb-csv-parser/2.3.0")
-        self.requires("xxhash/0.8.2")
         self.requires("gtest/1.15.0")
         self.requires("cereal/1.3.2")
 

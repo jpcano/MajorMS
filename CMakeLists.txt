@@ -11,7 +11,6 @@ set(PROJECT_UI_NAME majorMS_UI)
 find_package(cxxopts REQUIRED)
 find_package(utf8cpp REQUIRED)
 find_package(vincentlaucsb-csv-parser REQUIRED)
-find_package(xxHash REQUIRED)
 find_package(GTest REQUIRED)
 find_package(Qt6
   REQUIRED COMPONENTS Core Gui Widgets
