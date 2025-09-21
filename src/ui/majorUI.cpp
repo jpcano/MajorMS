@@ -16,6 +16,7 @@
 #include <memory>
 #include <vector>
 
+#include "dict_configs.h"
 #include "ui_majorUI.h"
 
 MajorUI::MajorUI(QWidget *parent) : QMainWindow(parent), ui(new Ui::MajorUI) {
@@ -33,7 +34,9 @@ MajorUI::MajorUI(QWidget *parent) : QMainWindow(parent), ui(new Ui::MajorUI) {
   // connect(ui->actionAbout_Qt, &QAction::triggered, this,
   //         &QApplication::aboutQt);
 
-  major = std::make_unique<Major>(std::vector({Dicts::EN, Dicts::ES}));
+  std::vector<DictConfig> configs;
+  for (const auto &c : dict_configs) configs.push_back(c.second);
+  major = std::make_unique<Major>(configs);
 }
 
 MajorUI::~MajorUI() { delete ui; }

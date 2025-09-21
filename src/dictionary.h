@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-#include "phonemes.h"
+#include "conversion.h"
 
 struct DictionaryConfig {
   std::string name;
@@ -22,6 +22,12 @@ struct DictionaryConfig {
   void serialize(Archive& ar) {
     ar(name, phonemes_path, dictionary_path);
   }
+};
+
+struct DictConfig {
+  std::string name;
+  std::string dictionary_path;
+  ConversionTable table;
 };
 
 struct Word {
@@ -39,20 +45,19 @@ struct Word {
 
 class Dictionary {
  public:
-  Dictionary(DictionaryConfig config);
+  Dictionary(DictConfig config);
   std::vector<Word> getWords(std::string number) const;
   std::string::size_type getLongest() const;
 
  private:
   std::string::size_type _longest = 0;
-  DictionaryConfig _config;
   std::map<std::string, std::vector<Word>> _dictionary;
 
   friend class cereal::access;
   Dictionary() {};
   template <class Archive>
   void serialize(Archive& ar) {
-    ar(_longest, _config, _dictionary);
+    ar(_longest, _dictionary);
   }
 };
 

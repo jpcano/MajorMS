@@ -17,11 +17,9 @@ typedef std::vector<Words> Result;
 
 enum SearchType { Merged, Separated };
 
-enum Dicts { ES, EN };
-
 class Major {
  public:
-  Major(std::vector<Dicts> dicts);
+  Major(std::vector<DictConfig> dicts);
   std::vector<Result> findWords(std::string number, SearchType st);
   void saveWords(std::string out_path, std::string start, std::string end,
                  SearchType st);

@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 
+#include "dict_configs.h"
 #include "dictionary.h"
 #include "major.h"
 #include "string_number.h"
@@ -18,8 +19,9 @@ int main(int argc, char** argv) {
       "numbers", "The number", cxxopts::value<std::vector<std::string>>())(
       "csv", "Save to CSV file", cxxopts::value<std::string>())(
       "dict", "A comma-sepparated list of dictionaries to use",
-      cxxopts::value<std::vector<std::string>>()->default_value("en,es"))(
-      "merged", "Used a merged search strategy", cxxopts::value<bool>());
+      cxxopts::value<std::vector<std::string>>()->default_value(
+          get_dict_names_csv()))("merged", "Used a merged search strategy",
+                                 cxxopts::value<bool>());
 
   options.parse_positional({"numbers"});
 
@@ -63,14 +65,10 @@ int main(int argc, char** argv) {
     exit(0);
   }
 
-  std::vector<Dicts> dicts;
-  for (std::string dict : result["dict"].as<std::vector<std::string>>()) {
-    if (dict == "en") {
-      dicts.push_back(Dicts::EN);
-    } else if (dict == "es") {
-      dicts.push_back(Dicts::ES);
-    }
-  }
+  std::vector<DictConfig> dicts;
+
+  for (std::string dict : result["dict"].as<std::vector<std::string>>())
+    dicts.push_back(dict_configs.at(dict));
 
   SearchType st =
       result.count("merged") ? SearchType::Merged : SearchType::Separated;

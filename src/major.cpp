@@ -11,21 +11,16 @@
 
 #include "string_number.h"
 
-std::map<Dicts, DictionaryConfig> dicts_configuration = {
-    {Dicts::ES, {"es", "../data/config_es_ES.json", "../data/es_ES.txt"}},
-    {Dicts::EN, {"en", "../data/config_en_UK.json", "../data/en_UK.txt"}}};
-
-Major::Major(std::vector<Dicts> dicts) {
+Major::Major(std::vector<DictConfig> dicts) {
   for (auto dict : dicts) {
-    DictionaryConfig dictConfig = dicts_configuration[dict];
     std::unique_ptr<Dictionary> d;
-    std::ifstream iFile(dictConfig.dictionary_path + ".cereal");
+    std::ifstream iFile(dict.dictionary_path + ".cereal");
     if (iFile.good()) {
       cereal::BinaryInputArchive iArchive(iFile);
       iArchive(d);
     } else {
-      d = std::make_unique<Dictionary>(dictConfig);
-      std::ofstream oFile(dictConfig.dictionary_path + ".cereal");
+      d = std::make_unique<Dictionary>(dict);
+      std::ofstream oFile(dict.dictionary_path + ".cereal");
       cereal::BinaryOutputArchive oArchive(oFile);
       oArchive(d);
     }

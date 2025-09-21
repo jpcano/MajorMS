@@ -10,7 +10,6 @@ set(PROJECT_UI_NAME majorMS_UI)
 
 find_package(cxxopts REQUIRED)
 find_package(utf8cpp REQUIRED)
-find_package(nlohmann_json REQUIRED)
 find_package(vincentlaucsb-csv-parser REQUIRED)
 find_package(xxHash REQUIRED)
 find_package(GTest REQUIRED)
@@ -25,9 +24,7 @@ add_subdirectory(tests)
 
 install(FILES
   data/en_UK.txt
-  data/config_en_UK.json
   data/es_ES.txt
-  data/config_es_ES.json
   DESTINATION data
 )
 

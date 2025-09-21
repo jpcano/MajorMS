@@ -8,8 +8,8 @@
 #include <string>
 #include <vector>
 
-Dictionary::Dictionary(DictionaryConfig config) : _config(config) {
-  Phonemes phonemes(config.phonemes_path);
+Dictionary::Dictionary(DictConfig config) {
+  Conversion conv(config.table);
   std::ifstream file(config.dictionary_path);
   std::string line;
 
@@ -17,7 +17,7 @@ Dictionary::Dictionary(DictionaryConfig config) : _config(config) {
     std::istringstream iss(line);
     Word word;
 
-    word.lang = _config.name;
+    word.lang = config.name;
 
     std::getline(iss, word.name, '\t');
     std::getline(iss, word.ipa, '\t');
@@ -26,18 +26,7 @@ Dictionary::Dictionary(DictionaryConfig config) : _config(config) {
     word.ipa.erase(0, 1);
     word.ipa.erase(word.ipa.size() - 1);
 
-    std::string::iterator it = word.ipa.begin();
-    int ipa_len = utf8::distance(word.ipa.begin(), word.ipa.end());
-    std::string number;
-
-    for (int i = 0; i < ipa_len; i++) {
-      std::vector<utf8::utfchar32_t> ch;
-      int len = phonemes.nextPhoneme(it, word.ipa.end(), ch);
-      i += len - 1;
-      if (!phonemes.isIgnore(ch)) {
-        number += phonemes.getNumber(ch, word.name, word.ipa);
-      }
-    }
+    std::string number = conv.phonetic_to_number(word.ipa);
 
     _longest = number.size() > _longest ? number.size() : _longest;
 
