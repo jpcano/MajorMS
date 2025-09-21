@@ -26,6 +26,7 @@ struct DictionaryConfig {
 
 struct DictConfig {
   std::string name;
+  std::string short_name;
   std::string dictionary_path;
   ConversionTable table;
 };

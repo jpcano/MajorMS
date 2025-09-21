@@ -17,7 +17,7 @@ Dictionary::Dictionary(DictConfig config) {
     std::istringstream iss(line);
     Word word;
 
-    word.lang = config.name;
+    word.lang = config.short_name;
 
     std::getline(iss, word.name, '\t');
     std::getline(iss, word.ipa, '\t');

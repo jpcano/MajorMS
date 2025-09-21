@@ -16,6 +16,7 @@ int main(int argc, char** argv) {
   cxxopts::Options options("majorMS", "Major Mnemonic System");
 
   options.add_options()("v,version", "Show version")("h,help", "Print usage")(
+      "tables", "Print conversion tables for each dictionary")(
       "numbers", "The number", cxxopts::value<std::vector<std::string>>())(
       "csv", "Save to CSV file", cxxopts::value<std::string>())(
       "dict", "A comma-sepparated list of dictionaries to use",
@@ -34,6 +35,11 @@ int main(int argc, char** argv) {
 
   if (result.count("version")) {
     std::cout << "Development version" << std::endl;
+    exit(0);
+  }
+
+  if (result.count("tables")) {
+    std::cout << get_conversion_tables() << std::endl;
     exit(0);
   }
 
