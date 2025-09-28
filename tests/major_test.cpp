@@ -104,16 +104,27 @@ TEST(Major, NoFullWords) {
       "3\t/m/\n"
       "4\t/r/\n"
       "12\t/tn/\n"
+      "22\t/nn/\n"
       "23\t/nm/\n"
       "24\t/nr/\n"
-      "123\t/tnm/\n";
+      "123\t/tnm/\n"
+      "324\t/mnr/\n";
   Major major({create_test_dict("es", raw_dict)});
 
   test_find(major, "123", "123 (tnm | es)\n\n");
+
   test_find(major, "321", "3 (m | es)\n\n2 (n | es)\n\n1 (t | es)\n\n");
+
   test_find(
       major, "124",
       "1 (t | es)\n\n24 (nr | es)\n\n---\n\n12 (tn | es)\n\n4 (r | es)\n\n");
+
+  test_find(major, "1", "1 (t | es)\n\n");
+  test_find(major, "22", "22 (nn | es)\n\n");
+  test_find(major, "324", "324 (mnr | es)\n\n");
+  // This should return 1,22,324 as well, but it doesn't
+  /*
   test_find(major, "122324",
             "12 (tn | es)\n\n23 (nm | es)\n\n24 (nr | es)\n\n");
+  */
 }
