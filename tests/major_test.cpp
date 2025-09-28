@@ -84,3 +84,15 @@ TEST(Major, MultipleDicts) {
       major, "161",
       "affricateword (attʃt | es)\n\n---\n\naffricateword (attʃt | en)\n\n");
 }
+
+TEST(Major, MergedSearch) {
+  std::string raw_dict = "affricateword\t/attʃt/\n";
+  Major major(
+      {create_test_dict("es", raw_dict), create_test_dict("en", raw_dict)});
+
+  test_find(major, "", "", SearchType::Merged);
+  test_find(major, "42", "", SearchType::Merged);
+  test_find(major, "161",
+            "affricateword (attʃt | es), affricateword (attʃt | en)\n\n",
+            SearchType::Merged);
+}
