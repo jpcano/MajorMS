@@ -25,9 +25,9 @@ Conversion::Conversion(ConversionTable t) {
   }
 }
 
-std::string Conversion::phonetic_to_number(std::string phonetic) {
-  std::string::iterator it = phonetic.begin();
-  std::string::iterator end = phonetic.end();
+std::string Conversion::phonetic_to_number(std::string_view phonetic) {
+  std::string_view::iterator it = phonetic.begin();
+  std::string_view::iterator end = phonetic.end();
   std::string number;
 
   while (it != end) {

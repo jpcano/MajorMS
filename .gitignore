@@ -5,3 +5,6 @@ dist/
 packages/
 _CPack_Packages/
 CMakeUserPresets.json
+
+build.py
+en_US.txt

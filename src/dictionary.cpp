@@ -39,6 +39,6 @@ Dictionary::Dictionary(DictConfig config) {
 
 std::string::size_type Dictionary::getLongest() const { return _longest; }
 
-std::vector<Word> Dictionary::getWords(std::string number) const {
-  return _dictionary.at(number);
+std::vector<Word> Dictionary::getWords(std::string_view number) const {
+  return _dictionary.at(static_cast<std::string>(number));
 }

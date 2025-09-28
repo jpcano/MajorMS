@@ -13,6 +13,7 @@
 
 Major::Major(std::vector<DictConfig> dicts) {
   for (auto dict : dicts) {
+    // std::unique_ptr<Dictionary> d = std::make_unique<Dictionary>(dict);
     std::unique_ptr<Dictionary> d;
     std::ifstream iFile(dict.dictionary_path + ".cereal");
     if (iFile.good()) {
@@ -28,7 +29,7 @@ Major::Major(std::vector<DictConfig> dicts) {
   }
 }
 
-std::vector<Result> Major::findWords(std::string number, SearchType st) {
+std::vector<Result> Major::findWords(std::string_view number, SearchType st) {
   std::vector<Result> ret;
 
   if (st == SearchType::Separated) {
@@ -42,7 +43,7 @@ std::vector<Result> Major::findWords(std::string number, SearchType st) {
   return ret;
 }
 
-std::vector<Word> Major::getWords(std::string number) {
+std::vector<Word> Major::getWords(std::string_view number) {
   std::vector<Word> ret = {};
   std::vector<Word> results;
   for (const auto& d : dicts_) {
@@ -67,7 +68,7 @@ std::string::size_type Major::getLongest() {
   return longest;
 }
 
-std::vector<Result> Major::findWords__(std::string number,
+std::vector<Result> Major::findWords__(std::string_view number,
                                        const std::unique_ptr<Dictionary>& dict,
                                        std::string::size_type longest) {
   std::vector<Result> ret;
@@ -85,12 +86,12 @@ std::vector<Result> Major::findWords__(std::string number,
   return ret;
 }
 
-std::vector<Result> Major::findWords_(std::string number, int depth,
+std::vector<Result> Major::findWords_(std::string_view number, int depth,
                                       const std::unique_ptr<Dictionary>& dict,
                                       std::string::size_type longest) {
   if (depth == 0) {
     return {{{dict == nullptr ? getWords(number) : dict->getWords(number),
-              number}}};
+              static_cast<std::string>(number)}}};
   }
 
   std::vector<Result> found;
@@ -101,7 +102,7 @@ std::vector<Result> Major::findWords_(std::string number, int depth,
       auto current = dict == nullptr ? getWords(n) : dict->getWords(n);
       for (auto i :
            findWords_(number.substr(i + 1), depth - 1, dict, longest)) {
-        i.insert(i.begin(), {current, number});
+        i.insert(i.begin(), {current, static_cast<std::string>(number)});
         found.push_back(i);
       }
     } catch (...) {

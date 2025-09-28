@@ -6,6 +6,7 @@
 #include <map>
 #include <set>
 #include <string>
+#include <string_view>
 #include <vector>
 
 struct ConversionTable {
@@ -22,7 +23,7 @@ CEREAL_CLASS_VERSION(ConversionTable, 1);
 class Conversion {
  public:
   Conversion(ConversionTable t);
-  std::string phonetic_to_number(std::string phonetic);
+  std::string phonetic_to_number(std::string_view phonetic);
 
  private:
   std::set<std::u32string> _ignore;
