@@ -17,8 +17,8 @@ DictConfig create_test_dict(std::string key, std::string text) {
   return dc;
 }
 
-void test_find(Major &major, std::string query, SearchType search_type,
-               std::string expected) {
+void test_find(Major &major, std::string query, std::string expected,
+               SearchType search_type = SearchType::Separated) {
   std::vector<Result> ret = major.findWords(query, search_type);
   std::string result = major.printResults(ret);
   EXPECT_STREQ(result.c_str(), expected.c_str());
@@ -31,8 +31,8 @@ TEST(Major, OneWordIsAllIgnore) {
       "amo\t/amo/\n";
   Major major({create_test_dict("es", raw_dict)});
 
-  test_find(major, "", SearchType::Separated, "");
-  test_find(major, "42", SearchType::Separated, "");
+  test_find(major, "", "");
+  test_find(major, "42", "");
 }
 
 TEST(Major, BasicWords) {
@@ -44,10 +44,9 @@ TEST(Major, BasicWords) {
       "degollé\t/deɣoˈʎe/\n";
   Major major({create_test_dict("es", raw_dict)});
 
-  test_find(major, "11", SearchType::Separated, "teta (teta | es)\n\n");
-  test_find(major, "99", SearchType::Separated, "pepe (pepe | es)\n\n");
-  test_find(major, "91204", SearchType::Separated,
-            "evidenciara (eβiðenθjaɾa | es)\n\n");
+  test_find(major, "11", "teta (teta | es)\n\n");
+  test_find(major, "99", "pepe (pepe | es)\n\n");
+  test_find(major, "91204", "evidenciara (eβiðenθjaɾa | es)\n\n");
 }
 
 TEST(Major, MultiWordResults) {
@@ -58,22 +57,19 @@ TEST(Major, MultiWordResults) {
       "popo\t/popo/\n";
   Major major({create_test_dict("es", raw_dict)});
 
-  test_find(major, "99", SearchType::Separated,
-            "pepe (pepe | es), popo (popo | es)\n\n");
+  test_find(major, "99", "pepe (pepe | es), popo (popo | es)\n\n");
 }
 
 TEST(Major, Affricates) {
   std::string raw_dict_es = "delgaducha\t/delgaðutʃa/\n";
   Major major_es({create_test_dict("es", raw_dict_es)});
 
-  test_find(major_es, "15716", SearchType::Separated,
-            "delgaducha (delgaðutʃa | es)\n\n");
+  test_find(major_es, "15716", "delgaducha (delgaðutʃa | es)\n\n");
 
   std::string raw_dict_en = "abjection\t/æbdʒˈɛkʃən/\n";
   Major major_en({create_test_dict("en", raw_dict_en)});
 
-  test_find(major_en, "96762", SearchType::Separated,
-            "abjection (æbdʒˈɛkʃən | en)\n\n");
+  test_find(major_en, "96762", "abjection (æbdʒˈɛkʃən | en)\n\n");
 }
 
 TEST(Major, MultipleDicts) {
@@ -81,9 +77,9 @@ TEST(Major, MultipleDicts) {
   Major major(
       {create_test_dict("es", raw_dict), create_test_dict("en", raw_dict)});
 
-  test_find(major, "", SearchType::Separated, "");
-  test_find(major, "42", SearchType::Separated, "");
+  test_find(major, "", "");
+  test_find(major, "42", "");
   test_find(
-      major, "161", SearchType::Separated,
+      major, "161",
       "affricateword (attʃt | es)\n\n---\n\naffricateword (attʃt | en)\n\n");
 }
