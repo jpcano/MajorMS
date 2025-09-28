@@ -4,7 +4,8 @@ enable_testing()
 add_executable(
   ${PROJECT_TEST_NAME}
   hello_test.cpp
-  string_number.cpp
+  string_number_test.cpp
+  major_test.cpp
 )
 target_include_directories(${PROJECT_TEST_NAME} PRIVATE ../src)
 target_link_libraries(${PROJECT_TEST_NAME} majorms_lib)

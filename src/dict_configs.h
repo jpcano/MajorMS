@@ -5,6 +5,7 @@
 #include <cereal/types/string.hpp>
 #include <fstream>
 #include <map>
+#include <sstream>
 #include <string>
 
 #include "conversion.h"
