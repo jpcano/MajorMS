@@ -34,6 +34,6 @@ class Major {
   std::vector<Result> findWords_(std::string_view number,
                                  const std::unique_ptr<Dictionary> &dict,
                                  std::string::size_type longest);
-  std::string::size_type getLongest();
   std::vector<Word> getWords(std::string_view number);
+  std::size_t longest_ = 0;
 };
