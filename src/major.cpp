@@ -94,10 +94,8 @@ std::vector<Result> Major::findWords_(std::string number, int depth,
   }
 
   std::vector<Result> found;
-  int a = number.size() - depth * longest;
 
-  for (std::string::size_type i = a > 0 ? a : 0; i < number.size() - depth;
-       ++i) {
+  for (std::string::size_type i = 0; i < number.size() - depth; ++i) {
     try {
       auto n = number.substr(0, i + 1);
       auto current = dict == nullptr ? getWords(n) : dict->getWords(n);

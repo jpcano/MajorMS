@@ -122,9 +122,9 @@ TEST(Major, NoFullWords) {
   test_find(major, "1", "1 (t | es)\n\n");
   test_find(major, "22", "22 (nn | es)\n\n");
   test_find(major, "324", "324 (mnr | es)\n\n");
-  // This should return 1,22,324 as well, but it doesn't
-  /*
+
   test_find(major, "122324",
-            "12 (tn | es)\n\n23 (nm | es)\n\n24 (nr | es)\n\n");
-  */
+            "1 (t | es)\n\n22 (nn | es)\n\n324 (mnr | es)\n\n---\n\n12 (tn | "
+            "es)\n\n2 (n | es)\n\n324 (mnr | es)\n\n---\n\n12 (tn | es)\n\n23 "
+            "(nm | es)\n\n24 (nr | es)\n\n");
 }

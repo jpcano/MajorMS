@@ -16,7 +16,7 @@ cp -r data build/Release
 
 conan install . --build=missing -s build_type=Debug
 cmake --preset conan-debug -DCMAKE_PREFIX_PATH=/home/suso/Qt/6.7.3/gcc_64
-cmake --build --preset conan-debug --parallel $(nproc --all)
+#cmake --build --preset conan-debug --parallel $(nproc --all)
 cp -r data build/Debug
 
 cmake --install build/Release --prefix $(pwd)/dist
