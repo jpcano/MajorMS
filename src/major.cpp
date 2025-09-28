@@ -100,7 +100,7 @@ std::vector<Result> Major::findWords_(std::string_view number, int depth,
     try {
       auto n = number.substr(0, i + 1);
       auto current = dict == nullptr ? getWords(n) : dict->getWords(n);
-      for (auto i :
+      for (Result& i :
            findWords_(number.substr(i + 1), depth - 1, dict, longest)) {
         i.insert(i.begin(), {current, static_cast<std::string>(number)});
         found.push_back(i);

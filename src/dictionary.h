@@ -42,7 +42,7 @@ struct Word {
 class Dictionary {
  public:
   Dictionary(DictConfig config);
-  std::vector<Word> getWords(std::string_view number) const;
+  const std::vector<Word>& getWords(std::string_view number) const;
   std::string::size_type getLongest() const;
 
  private:
