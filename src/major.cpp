@@ -90,19 +90,22 @@ std::vector<Result> Major::findWords_(std::string_view number, int depth,
                                       const std::unique_ptr<Dictionary>& dict,
                                       std::string::size_type longest) {
   if (depth == 0) {
-    return {{{dict == nullptr ? getWords(number) : dict->getWords(number),
-              static_cast<std::string>(number)}}};
+    Words words = {dict == nullptr ? getWords(number) : dict->getWords(number),
+                   static_cast<std::string>(number)};
+    Result result = std::vector({words});
+    return std::vector({result});
   }
 
   std::vector<Result> found;
 
   for (std::string::size_type i = 0; i < number.size() - depth; ++i) {
     try {
-      auto n = number.substr(0, i + 1);
-      auto current = dict == nullptr ? getWords(n) : dict->getWords(n);
+      std::string_view n = number.substr(0, i + 1);
+      std::vector<Word> current =
+          dict == nullptr ? getWords(n) : dict->getWords(n);
       for (Result& i :
            findWords_(number.substr(i + 1), depth - 1, dict, longest)) {
-        i.insert(i.begin(), {current, static_cast<std::string>(number)});
+        i.insert(i.begin(), Words{current, static_cast<std::string>(number)});
         found.push_back(i);
       }
     } catch (...) {
