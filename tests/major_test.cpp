@@ -6,7 +6,7 @@
 #include <fstream>
 #include <iostream>
 
-DictConfig create_test_dict(std::string key, std::string text) {
+DictConfig create_test_dict(const std::string &key, const std::string &text) {
   std::string dir_path = "../data/" + key + ".test.txt";
   std::ofstream file;
   std::filesystem::remove(dir_path + ".cereal");
@@ -17,7 +17,8 @@ DictConfig create_test_dict(std::string key, std::string text) {
   return dc;
 }
 
-void test_find(Major &major, std::string query, std::string expected,
+void test_find(Major &major, const std::string &query,
+               const std::string &expected,
                SearchType search_type = SearchType::Separated) {
   std::vector<Result> ret = major.findWords(query, search_type);
   std::string result = major.printResults(ret);
