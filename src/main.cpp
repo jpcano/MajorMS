@@ -13,7 +13,49 @@
 #include "major.h"
 #include "string_number.h"
 
+struct ParseResult {
+  cxxopts::ParseResult result;
+  cxxopts::OptionNames numbers;
+};
+
+ParseResult parse_options(int argc, char** argv);
+
 int main(int argc, char** argv) {
+  auto [result, numbers] = parse_options(argc, argv);
+
+  std::vector<DictConfig> dicts;
+  for (std::string dict : result["dict"].as<std::vector<std::string>>())
+    dicts.push_back(dict_configs.configs.at(dict));
+
+  std::ofstream oFile("dict_configs.json");
+  cereal::JSONOutputArchive oArchive(oFile);
+  oArchive(dict_configs);
+
+  SearchType st =
+      result.count("merged") ? SearchType::Merged : SearchType::Separated;
+  auto splits = result["splits"].as<unsigned int>();
+
+  Major major(dicts);
+
+  if (result.count("csv")) {
+    major.saveWords(result["csv"].as<std::string>(), numbers[0], numbers[1], st,
+                    splits);
+    exit(0);
+  }
+
+  for (StringNumber n(numbers[0]); n <= StringNumber(numbers[1]); n++) {
+    std::cout << n.get() << " ===============================" << std::endl
+              << std::endl;
+    auto results = major.findWords(n.get(), st, splits);
+    std::cout << Major::printResults(results);
+
+    if (n != StringNumber(numbers[1])) std::cout << std::endl;
+  }
+
+  return 0;
+}
+
+ParseResult parse_options(int argc, char** argv) {
   // clang-format off
   cxxopts::Options options(
     "majorMS",
@@ -36,7 +78,7 @@ int main(int argc, char** argv) {
 
   options.parse_positional({"numbers"});
 
-  auto result = options.parse(argc, argv);
+  cxxopts::ParseResult result = options.parse(argc, argv);
 
   if (result.count("help")) {
     std::cout << options.help() << std::endl;
@@ -53,7 +95,8 @@ int main(int argc, char** argv) {
     exit(0);
   }
 
-  auto numbers = result["numbers"].as<std::vector<std::string>>();
+  cxxopts::OptionNames numbers =
+      result["numbers"].as<std::vector<std::string>>();
   if (numbers.size() == 1) {
     try {
       StringNumber sn(numbers[0]);
@@ -91,36 +134,5 @@ int main(int argc, char** argv) {
       exit(0);
     }
   }
-
-  std::vector<DictConfig> dicts;
-
-  for (std::string dict : result["dict"].as<std::vector<std::string>>())
-    dicts.push_back(dict_configs.configs.at(dict));
-
-  std::ofstream oFile("dict_configs.json");
-  cereal::JSONOutputArchive oArchive(oFile);
-  oArchive(dict_configs);
-
-  SearchType st =
-      result.count("merged") ? SearchType::Merged : SearchType::Separated;
-  auto splits = result["splits"].as<unsigned int>();
-
-  Major major(dicts);
-
-  if (result.count("csv")) {
-    major.saveWords(result["csv"].as<std::string>(), numbers[0], numbers[1], st,
-                    splits);
-    exit(0);
-  }
-
-  for (StringNumber n(numbers[0]); n <= StringNumber(numbers[1]); n++) {
-    std::cout << n.get() << " ===============================" << std::endl
-              << std::endl;
-    auto results = major.findWords(n.get(), st, splits);
-    std::cout << Major::printResults(results);
-
-    if (n != StringNumber(numbers[1])) std::cout << std::endl;
-  }
-
-  return 0;
+  return {result, numbers};
 }
