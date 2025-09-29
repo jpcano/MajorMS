@@ -55,24 +55,26 @@ std::vector<Result> Major::findWords(std::string_view number, SearchType st) {
 
   if (st == SearchType::Separated) {
     for (const auto& dict : dicts_) {
-      std::vector<Result> results =
-          findWords_(number, dict, dict->getLongest());
+      std::vector<Result> results = findWords_(
+          number, dict->getLongest(),
+          [&dict = std::as_const(dict)](auto s) { return dict->getWords(s); });
       ret.insert(std::end(ret), std::begin(results), std::end(results));
     }
   } else {
-    ret = findWords_(number, nullptr, longest_);
+    ret = findWords_(number, longest_,
+                     [this](auto s) { return this->getWords(s); });
   }
   return ret;
 }
 
 std::vector<Result> Major::findWords_(std::string_view number,
-                                      const std::unique_ptr<Dictionary>& dict,
-                                      std::string::size_type longest) {
+                                      std::string::size_type longest,
+                                      GetWordsCallback get_words_callback) {
   std::vector<Result> ret;
   for (std::string::size_type depth = number.size() / (longest + 1);
        depth < number.size(); depth++) {
     try {
-      ret = findWords__(number, depth, dict, longest);
+      ret = findWords__(number, depth, longest, get_words_callback);
       if (ret.size()) break;
     } catch (...) {
     }
@@ -81,16 +83,11 @@ std::vector<Result> Major::findWords_(std::string_view number,
 }
 
 std::vector<Result> Major::findWords__(std::string_view number, int depth,
-                                       const std::unique_ptr<Dictionary>& dict,
-                                       std::string::size_type longest) {
+                                       std::string::size_type longest,
+                                       GetWordsCallback get_words_callback) {
   if (depth == 0) {
-    Words words;
-
-    if (dict == nullptr)
-      words = {getWords(number), static_cast<std::string>(number)};
-    else
-      words = {dict->getWords(number), static_cast<std::string>(number)};
-
+    Words words = {get_words_callback(number),
+                   static_cast<std::string>(number)};
     return std::vector({std::vector({words})});
   }
 
@@ -100,15 +97,11 @@ std::vector<Result> Major::findWords__(std::string_view number, int depth,
     try {
       std::string_view number_left = number.substr(0, i + 1);
       std::string_view number_right = number.substr(i + 1);
-      std::vector<Word> current;
+      std::vector<Word> current = get_words_callback(number_left);
+      std::vector<Result> partial_results =
+          findWords__(number_right, depth - 1, longest, get_words_callback);
 
-      if (dict == nullptr)
-        current = getWords(number_left);
-      else
-        current = dict->getWords(number_left);
-
-      for (Result& partial_result :
-           findWords__(number_right, depth - 1, dict, longest)) {
+      for (Result& partial_result : partial_results) {
         partial_result.insert(partial_result.begin(),
                               Words{current, static_cast<std::string>(number)});
         found.push_back(partial_result);

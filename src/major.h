@@ -27,13 +27,18 @@ class Major {
   static std::string printResults(std::vector<Result> results);
 
  private:
+  using GetWordsCallback = std::function<std::vector<Word>(std::string_view)>;
+
   std::vector<std::unique_ptr<Dictionary>> dicts_;
-  std::vector<Result> findWords__(std::string_view number, int depth,
-                                  const std::unique_ptr<Dictionary> &dict,
-                                  std::string::size_type longest);
   std::vector<Result> findWords_(std::string_view number,
-                                 const std::unique_ptr<Dictionary> &dict,
-                                 std::string::size_type longest);
+
+                                 std::string::size_type longest,
+                                 GetWordsCallback gw);
+  std::vector<Result> findWords__(std::string_view number, int depth,
+
+                                  std::string::size_type longest,
+                                  GetWordsCallback gw);
+
   std::vector<Word> getWords(std::string_view number);
   std::size_t longest_ = 0;
 };
