@@ -43,7 +43,7 @@ MajorUI::~MajorUI() { delete ui; }
 
 void MajorUI::lineEditChanged() {
   auto n = ui->lineEdit->text();
-  auto results = major->findWords(n.toStdString(), SearchType::Separated);
+  auto results = major->findWords(n.toStdString(), SearchType::Separated, 0);
   std::string results_fmt = Major::printResults(results);
   ui->textEdit->setText(QString::fromStdString(results_fmt));
 }

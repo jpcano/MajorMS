@@ -21,9 +21,10 @@ enum SearchType { Merged, Separated };
 class Major {
  public:
   Major(std::vector<DictConfig> dicts);
-  std::vector<Result> findWords(std::string_view number, SearchType st);
+  std::vector<Result> findWords(std::string_view number, SearchType st,
+                                unsigned int splits);
   void saveWords(std::string out_path, std::string start, std::string end,
-                 SearchType st);
+                 SearchType st, unsigned int splits);
   static std::string printResults(std::vector<Result> results);
 
  private:
@@ -31,9 +32,8 @@ class Major {
 
   std::vector<std::unique_ptr<Dictionary>> dicts_;
   std::vector<Result> findWords_(std::string_view number,
-
                                  std::string::size_type longest,
-                                 GetWordsCallback gw);
+                                 GetWordsCallback gw, unsigned int splits);
   std::vector<Result> findWords__(std::string_view number, int depth,
 
                                   std::string::size_type longest,

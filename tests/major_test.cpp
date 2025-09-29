@@ -19,8 +19,9 @@ DictConfig create_test_dict(const std::string &key, const std::string &text) {
 
 void test_find(Major &major, const std::string &query,
                const std::string &expected,
-               SearchType search_type = SearchType::Separated) {
-  std::vector<Result> ret = major.findWords(query, search_type);
+               SearchType search_type = SearchType::Separated,
+               unsigned int splits = 0) {
+  std::vector<Result> ret = major.findWords(query, search_type, splits);
   std::string result = major.printResults(ret);
   EXPECT_STREQ(result.c_str(), expected.c_str());
 }
@@ -127,4 +128,22 @@ TEST(Major, NoFullWords) {
             "1 (t | es)\n\n22 (nn | es)\n\n324 (mnr | es)\n\n---\n\n12 (tn | "
             "es)\n\n2 (n | es)\n\n324 (mnr | es)\n\n---\n\n12 (tn | es)\n\n23 "
             "(nm | es)\n\n24 (nr | es)\n\n");
+}
+
+TEST(Major, Splits) {
+  std::string raw_dict =
+      "1\t/t/\n"
+      "2\t/n/\n"
+      "3\t/m/\n"
+      "123\t/tnm/\n"
+      "12\t/tn/\n"
+      "324\t/mnr/\n";
+  Major major({create_test_dict("es", raw_dict)});
+
+  test_find(major, "123", "123 (tnm | es)\n\n");
+  test_find(major, "123", "12 (tn | es)\n\n3 (m | es)\n\n",
+            SearchType::Separated, 1);
+  test_find(major, "123", "1 (t | es)\n\n2 (n | es)\n\n3 (m | es)\n\n",
+            SearchType::Separated, 2);
+  test_find(major, "123", "", SearchType::Separated, 3);
 }

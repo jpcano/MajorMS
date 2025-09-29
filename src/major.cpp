@@ -50,29 +50,34 @@ std::vector<Word> Major::getWords(std::string_view number) {
   return ret;
 }
 
-std::vector<Result> Major::findWords(std::string_view number, SearchType st) {
+std::vector<Result> Major::findWords(std::string_view number, SearchType st,
+                                     unsigned int splits) {
   std::vector<Result> ret;
 
   if (st == SearchType::Separated) {
     for (const auto& dict : dicts_) {
       std::vector<Result> results = findWords_(
           number, dict->getLongest(),
-          [&dict = std::as_const(dict)](auto s) { return dict->getWords(s); });
+          [&dict = std::as_const(dict)](auto s) { return dict->getWords(s); },
+          splits);
       ret.insert(std::end(ret), std::begin(results), std::end(results));
     }
   } else {
-    ret = findWords_(number, longest_,
-                     [this](auto s) { return this->getWords(s); });
+    ret = findWords_(
+        number, longest_, [this](auto s) { return this->getWords(s); }, splits);
   }
   return ret;
 }
 
 std::vector<Result> Major::findWords_(std::string_view number,
                                       std::string::size_type longest,
-                                      GetWordsCallback get_words_callback) {
+                                      GetWordsCallback get_words_callback,
+                                      unsigned int splits) {
   std::vector<Result> ret;
-  for (std::string::size_type depth = number.size() / (longest + 1);
-       depth < number.size(); depth++) {
+  auto minimal_depth = number.size() / (longest + 1);
+  auto initial_depth = minimal_depth > splits ? minimal_depth : splits;
+  for (std::string::size_type depth = initial_depth; depth < number.size();
+       depth++) {
     try {
       ret = findWords__(number, depth, longest, get_words_callback);
       if (ret.size()) break;
@@ -113,13 +118,13 @@ std::vector<Result> Major::findWords__(std::string_view number, int depth,
 }
 
 void Major::saveWords(std::string out_path, std::string start, std::string end,
-                      SearchType st) {
+                      SearchType st, unsigned int splits) {
   std::ofstream fs(out_path, std::ofstream::out);
 
   auto writer = csv::make_csv_writer(fs);
 
   for (StringNumber n(start); n <= StringNumber(end); n++) {
-    auto results = findWords(n.get(), st);
+    auto results = findWords(n.get(), st, splits);
     std::string value = Major::printResults(results);
     writer << std::vector<std::string>({n.get(), value});
   }
